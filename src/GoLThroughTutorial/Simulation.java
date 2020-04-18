@@ -67,6 +67,17 @@ public class Simulation {
 
         return count;
     }
+    public static Simulation copy(Simulation simulation){
+        Simulation copy = new Simulation(simulation.width,simulation.height);
+
+        for (int y = 0; y < simulation.height; y++) {
+            for (int x = 0; x < simulation.width; x++) {
+                copy.setState(x,y,simulation.getState(x,y));
+            }
+        }
+
+        return copy;
+    }
 
     public int getState(int x, int y){
         if (x<0 || x>=width){
