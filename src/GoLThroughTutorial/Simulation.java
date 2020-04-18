@@ -1,12 +1,17 @@
 package GoLThroughTutorial;
 
-public class NewGol {
+import javax.swing.*;
+
+public class Simulation {
+
+    public static int DEAD = 0;
+    public static int ALIVE = 1;
 
     int width, height;
     int [][] board;
     boolean simulate = false;
 
-    public NewGol(int width, int height) {
+    public Simulation(int width, int height) {
         this.width = width;
         this.height = height;
         this.board = new int[width][height];
@@ -17,7 +22,7 @@ public class NewGol {
         for (int y = 0; y < height; y++) {
             String line = "|";
             for (int x = 0; x < width; x++) {
-                if (this.board[x][y] == 0){
+                if (this.board[x][y] == DEAD){
                     line += "X";
                 }else{
                     line+="O";
@@ -30,10 +35,10 @@ public class NewGol {
     }
 
     public void setAlive(int x, int y){
-        this.setState(x,y,1);
+        this.setState(x,y,ALIVE);
     }
     public void setDead(int x,int y){
-        this.setState(x,y,0);
+        this.setState(x,y,DEAD);
     }
 
     public void setState(int x, int y, int state){
@@ -65,10 +70,10 @@ public class NewGol {
 
     public int getState(int x, int y){
         if (x<0 || x>=width){
-            return 0;
+            return DEAD;
         }
         if (y<0||y>=height){
-            return 0;
+            return DEAD;
         }
         return this.board[x][y];
     }
@@ -79,19 +84,19 @@ public class NewGol {
             for (int x = 0; x < width; x++) {
                 int aliveNeighbours = aliveNeighboursCount(x,y);
 
-                if (this.board[x][y] == 1){
+                if (getState(x,y) == ALIVE){
                     if (aliveNeighbours<2){
-                        newBoard[x][y] = 0;
+                        newBoard[x][y] = DEAD;
                     }
                     else if (aliveNeighbours == 2 || aliveNeighbours == 3){
-                        newBoard[x][y] = 1;
+                        newBoard[x][y] = ALIVE;
                     }
                     else if (aliveNeighbours>3){
-                        newBoard[x][y] = 0;
+                        newBoard[x][y] = DEAD;
                     }
                 }else{
                     if (aliveNeighbours == 3){
-                        newBoard[x][y] = 1;
+                        newBoard[x][y] = ALIVE;
                     }
                 }
             }
@@ -101,7 +106,7 @@ public class NewGol {
 
 
     public static void main(String[] args) {
-        NewGol simulation = new NewGol(8,5);
+        Simulation simulation = new Simulation(8,5);
 
 
 
