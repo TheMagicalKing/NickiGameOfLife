@@ -1,3 +1,5 @@
+package OldGoLAttempts;
+
 public class Cell {
 
     private int livingNeighbours = 0;

@@ -1,3 +1,5 @@
+package OldGoLAttempts;
+
 public class TestGoL {
 
     public static void main(String[] args)
@@ -56,11 +58,11 @@ public class TestGoL {
 
                 // Implementing the Rules of Life
 
-                // Cell is lonely and dies
+                // OldGoLAttempts.Cell is lonely and dies
                 if ((grid[l][m] == 1) && (aliveNeighbours < 2))
                     future[l][m] = 0;
 
-                    // Cell dies due to over population
+                    // OldGoLAttempts.Cell dies due to over population
                 else if ((grid[l][m] == 1) && (aliveNeighbours > 3))
                     future[l][m] = 0;
 

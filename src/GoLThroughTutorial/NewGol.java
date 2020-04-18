@@ -1,7 +1,10 @@
+package GoLThroughTutorial;
+
 public class NewGol {
 
     int width, height;
     int [][] board;
+    boolean simulate = false;
 
     public NewGol(int width, int height) {
         this.width = width;
@@ -86,8 +89,38 @@ public class NewGol {
         this.board = newBoard;
     }
 
+    public void update() {
+
+            int[][] newBoard = new int[width][height];
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    int aliveNeighbours = aliveNeighboursCount(x,y);
+
+                    if (this.board[x][y] == 1){
+                        if (aliveNeighbours<2){
+                            newBoard[x][y] = 0;
+                        }
+                        else if (aliveNeighbours == 2 || aliveNeighbours == 3){
+                            newBoard[x][y] = 1;
+                        }
+                        else if (aliveNeighbours>3){
+                            newBoard[x][y] = 0;
+                        }
+                    }else{
+                        if (aliveNeighbours == 3){
+                            newBoard[x][y] = 1;
+                        }
+                    }
+                }
+            }
+            this.board = newBoard;
+
+    }
+
     public static void main(String[] args) {
         NewGol simulation = new NewGol(8,5);
+
+
 
         simulation.setAlive(2,2);
         simulation.setAlive(3,2);

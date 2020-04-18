@@ -1,3 +1,5 @@
+package OldGoLAttempts;
+
 import java.lang.reflect.Array;
 import javafx.application.Application;
 import javafx.scene.Group;
