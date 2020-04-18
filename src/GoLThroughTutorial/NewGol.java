@@ -30,10 +30,20 @@ public class NewGol {
     }
 
     public void setAlive(int x, int y){
-        this.board[x][y] = 1;
+        this.setState(x,y,1);
     }
     public void setDead(int x,int y){
-        this.board[x][y] = 0;
+        this.setState(x,y,0);
+    }
+
+    public void setState(int x, int y, int state){
+        if (x<0 || x>=width){
+            return;
+        }
+        if (y<0||y>=height){
+            return;
+        }
+        this.board[x][y] = state;
     }
 
     public int aliveNeighboursCount(int x, int y){
@@ -89,33 +99,6 @@ public class NewGol {
         this.board = newBoard;
     }
 
-    public void update() {
-
-            int[][] newBoard = new int[width][height];
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    int aliveNeighbours = aliveNeighboursCount(x,y);
-
-                    if (this.board[x][y] == 1){
-                        if (aliveNeighbours<2){
-                            newBoard[x][y] = 0;
-                        }
-                        else if (aliveNeighbours == 2 || aliveNeighbours == 3){
-                            newBoard[x][y] = 1;
-                        }
-                        else if (aliveNeighbours>3){
-                            newBoard[x][y] = 0;
-                        }
-                    }else{
-                        if (aliveNeighbours == 3){
-                            newBoard[x][y] = 1;
-                        }
-                    }
-                }
-            }
-            this.board = newBoard;
-
-    }
 
     public static void main(String[] args) {
         NewGol simulation = new NewGol(8,5);

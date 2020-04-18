@@ -1,11 +1,17 @@
 package GoLThroughTutorial;
 import java.util.*;
+
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
+import javafx.scene.transform.NonInvertibleTransformException;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
@@ -13,10 +19,11 @@ import java.util.concurrent.TimeUnit;
 public class MainView extends VBox {
 
     private Button stepButton;
-    private Button updateStep;
     private Canvas canvas;
     private NewGol simulation;
     private Affine affine;
+
+    private int drawMode = 1;
 
     public MainView() {
 
@@ -28,59 +35,50 @@ public class MainView extends VBox {
 
         });
 
-        updateStep = new Button("Auto Step");
-        this.updateStep.setOnAction(actionEvent -> {
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Runnable updater = new Runnable() {
-                        @Override
-                        public void run() {
-                            for (int i = 0; i <2; i++) {
-                                switch (i){
-                                    case 0:
-                                        simulation.step();
-                                        System.out.println("Thread should take a step!");
-                                        break;
-                                    case 1:
-                                        draw();
-                                        System.out.println("Thread should be drawing!");
-                                        break;
-                                }
 
-                            }
-                        }
-                    };
-                    while (true){
-                        try {
-                            Thread.sleep(3000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
+        this.canvas = new Canvas(400,400);
+        this.canvas.setOnMousePressed(this::handleDraw);
+        this.canvas.setOnMouseDragged(this::handleDraw);
 
+        this.setOnKeyPressed(this::onKeyPressed);
 
-
-        });
-        canvas = new Canvas(400,400);
-
-        this.getChildren().addAll(this.stepButton,this.updateStep,this.canvas);
+        this.getChildren().addAll(this.stepButton,this.canvas);
 
         this.affine = new Affine();
         this.affine.appendScale(400/10f,400/10f);
 
         this.simulation = new NewGol(10,10);
-        simulation.setAlive(5,5);
-        simulation.setAlive(3,5);
-        simulation.setAlive(4,4);
-        simulation.setAlive(4,6);
-        simulation.setAlive(7,5);
-        simulation.setAlive(6,4);
-        simulation.setAlive(6,6);
+
 
         }
+
+    private void onKeyPressed(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.D){
+            this.drawMode=1;
+            System.out.println("drawing!");
+        }else if (keyEvent.getCode() == KeyCode.E){
+            this.drawMode=0;
+            System.out.println("erasing!");
+        }
+    }
+
+    private void handleDraw(MouseEvent mouseEvent) {
+        double mouseX = mouseEvent.getX();
+        double mouseY = mouseEvent.getY();
+
+        System.out.println(mouseX +","+mouseY);
+
+        try {
+            Point2D simCoord = this.affine.inverseTransform(mouseX, mouseY);
+            int simX = (int) simCoord.getX();
+            int simY = (int) simCoord.getY();
+
+            this.simulation.setState(simX,simY,drawMode);
+            draw();
+        } catch (NonInvertibleTransformException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void draw(){
         GraphicsContext g = this.canvas.getGraphicsContext2D();
